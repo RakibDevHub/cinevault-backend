@@ -1,68 +1,71 @@
-const dns = require('dns');
-dns.setServers(['1.1.1.1', '8.8.8.8']); // Cloudflare + Google
+const dns = require("dns");
+dns.setServers(["1.1.1.1", "8.8.8.8"]); // Cloudflare + Google
 
-const express = require('express');
-const dotenv = require('dotenv');
-const connectDB = require('./config/db');
-const movieRoutes = require('./routes/movieRoutes');
+const express = require("express");
+const dotenv = require("dotenv");
+const cors = require("cors");
+const connectDB = require("./config/db");
+const movieRoutes = require("./routes/movieRoutes");
 
 dotenv.config();
 connectDB();
 
 const app = express();
 
+app.use(cors());
+
 app.use(express.json());
 
 // Base URL (works locally and on Render)
 const BASE_URL =
-  process.env.NODE_ENV === 'production'
-    ? 'https://cinevault-backend-aric.onrender.com'
+  process.env.NODE_ENV === "production"
+    ? "https://cinevault-backend-aric.onrender.com"
     : `http://localhost:${process.env.PORT || 5000}`;
 
 // Friendly landing page at root
-app.get('/', (req, res) => {
+app.get("/", (req, res) => {
   const endpoints = [
     {
-      title: 'Get All Movies',
-      method: 'GET',
-      path: '/api/v1/movies',
-      description: 'Returns all movies in the database.',
+      title: "Get All Movies",
+      method: "GET",
+      path: "/api/v1/movies",
+      description: "Returns all movies in the database.",
     },
     {
-      title: 'Search by Title',
-      method: 'GET',
-      path: '/api/v1/movies?search=inception',
-      description: 'Case-insensitive search on movie title.',
+      title: "Search by Title",
+      method: "GET",
+      path: "/api/v1/movies?search=inception",
+      description: "Case-insensitive search on movie title.",
     },
     {
-      title: 'Filter by Genre',
-      method: 'GET',
-      path: '/api/v1/movies?genre=Sci-Fi',
-      description: 'Filter movies by exact genre (e.g., Sci-Fi, Action).',
+      title: "Filter by Genre",
+      method: "GET",
+      path: "/api/v1/movies?genre=Sci-Fi",
+      description: "Filter movies by exact genre (e.g., Sci-Fi, Action).",
     },
     {
-      title: 'Sort by Rating (High → Low)',
-      method: 'GET',
-      path: '/api/v1/movies?sort=rating',
-      description: 'Returns movies sorted by highest rating first.',
+      title: "Sort by Rating (High → Low)",
+      method: "GET",
+      path: "/api/v1/movies?sort=rating",
+      description: "Returns movies sorted by highest rating first.",
     },
     {
-      title: 'Sort by Year (Newest → Oldest)',
-      method: 'GET',
-      path: '/api/v1/movies?sort=year',
-      description: 'Returns movies sorted by latest release year first.',
+      title: "Sort by Year (Newest → Oldest)",
+      method: "GET",
+      path: "/api/v1/movies?sort=year",
+      description: "Returns movies sorted by latest release year first.",
     },
     {
-      title: 'Combined Query',
-      method: 'GET',
-      path: '/api/v1/movies?genre=Sci-Fi&sort=rating',
-      description: 'Combine filter and sort in a single request.',
+      title: "Combined Query",
+      method: "GET",
+      path: "/api/v1/movies?genre=Sci-Fi&sort=rating",
+      description: "Combine filter and sort in a single request.",
     },
     {
-      title: 'Get Single Movie by ID',
-      method: 'GET',
-      path: '/api/v1/movies/:id',
-      description: 'Returns a single movie by its MongoDB ObjectId.',
+      title: "Get Single Movie by ID",
+      method: "GET",
+      path: "/api/v1/movies/:id",
+      description: "Returns a single movie by its MongoDB ObjectId.",
     },
   ];
 
@@ -85,9 +88,9 @@ app.get('/', (req, res) => {
           />
           <button class="copy-btn" onclick="copyUrl('url-${i}', this)">Copy</button>
         </div>
-      </div>`
+      </div>`,
     )
-    .join('');
+    .join("");
 
   res.send(`<!DOCTYPE html>
 <html lang="en">
@@ -273,7 +276,7 @@ app.get('/', (req, res) => {
 });
 
 // Mount routes
-app.use('/api/v1/movies', movieRoutes);
+app.use("/api/v1/movies", movieRoutes);
 
 const PORT = process.env.PORT || 5000;
 
