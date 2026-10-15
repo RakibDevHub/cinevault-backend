@@ -11,7 +11,6 @@ connectDB();
 
 const app = express();
 
-app.set('trust proxy', 1); // Trust the first proxy (if behind a reverse proxy like Nginx or Render)
 app.use(express.json());
 
 // Base URL (works locally and on Render)
